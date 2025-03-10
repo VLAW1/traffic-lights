@@ -64,7 +64,14 @@ python -m sim
 You can create custom intersections by defining light configurations and phases:
 
 ``` python
-from sim.models.lights import Direction, TrafficLight, TrafficLightState, TrafficLightCycleTime, Phase, Intersection
+from sim.models import (
+    Direction,
+    TrafficLightState,
+    TrafficLight,
+    TrafficLightCycleTime,
+    Phase,
+    Intersection,
+)
 
 # Define traffic lights
 lights = {
@@ -79,16 +86,33 @@ lights = {
 
 # Define cycle times
 cycle_time = TrafficLightCycleTime(green=30, yellow=3)
+# Define other cycle times...
 
-# Define phases
+# Define traffic light phases
 phases = [
-    Phase(lights=[lights[Direction.NORTH], lights[Direction.SOUTH]], cycle_time=cycle_time),
+    Phase(
+        lights=[
+            lights[Direction.NORTH],
+            lights[Direction.SOUTH],
+        ],
+        cycle_time=cycle_time
+    ),
     # Define other phases...
 ]
 
 # Create intersection
 intersection = Intersection(lights=lights, phases=phases)
 ```
+
+## What's a "phase"?
+
+A traffic signal "phase" is a stage of (one or more) traffic light colors. In this project, phases are defined according to which light(s) are in sync, along with the green and yellow signal durations (and are red otherwise).
+
+(The _Manual on Uniform Traffic Control Devices_ defines a "Signal Phase" as:
+
+> the right-of-way, yellow change, and red clearance intervals in a cycle that are assigned to an independent traffic movement or combination of movements.
+
+See [here](https://mutcd.fhwa.dot.gov/pdfs/11th_Edition/part1.pdf), page 26. As of the time of writing, the current edition of the full manual can be found [here](https://mutcd.fhwa.dot.gov/kno_11th_Edition.htm).)
 
 ## Traffic Patterns
 

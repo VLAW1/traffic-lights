@@ -58,10 +58,7 @@ phases = [
 ]
 
 
-intersection: Intersection = Intersection(
-    lights=lights,
-    phases=phases,
-)
+intersection: Intersection = Intersection(lights=lights, phases=phases)
 
 
 # Vehicle arrival rates (vehicles/sec)
