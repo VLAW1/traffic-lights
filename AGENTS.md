@@ -1,0 +1,1 @@
+This project uses Python 3.12. The evironment you work in has both Python 3.11 and Python 3.12, so try to use `python3.12` instead of just `python` when you run commands to be safe.
