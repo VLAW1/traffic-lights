@@ -2,6 +2,7 @@ from collections import defaultdict
 from collections.abc import Generator
 from itertools import cycle
 from typing import Any
+
 import simpy
 import numpy as np
 
