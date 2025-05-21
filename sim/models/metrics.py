@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 from pydantic import ConfigDict
 from pydantic.dataclasses import dataclass, Field
 
@@ -7,7 +8,7 @@ from pydantic.dataclasses import dataclass, Field
 @dataclass(config=ConfigDict(arbitrary_types_allowed=True))
 class SummaryStatistics:
     total_vehicles: int = 0
-    waiting_times: np.array = Field(default_factory=lambda: np.array([]))
+    waiting_times: npt.ArrayLike = Field(default_factory=lambda: np.array([]))
 
     def average_waiting_time(self):
         if self.total_vehicles == 0:
@@ -40,7 +41,7 @@ class SummaryStatistics:
         plt.hist(self.waiting_times)
         plt.show()
 
-    def show_summary(self):
+    def show_summary(self, include_plot: bool = False):
         print(
             f'Total vehicles:           {self.total_vehicles:.2f}\n'
             f'Average waiting time:     {self.average_waiting_time():.2f}\n'
@@ -52,4 +53,5 @@ class SummaryStatistics:
             f'Total waiting time:       {self.total_waiting_time():.2f}'
         )
 
-        self.plot_waiting_times()
+        if include_plot:
+            self.plot_waiting_times()
