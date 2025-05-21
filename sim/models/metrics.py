@@ -10,12 +10,18 @@ class SummaryStatistics:
     waiting_times: np.array = Field(default_factory=lambda: np.array([]))
 
     def average_waiting_time(self):
+        if self.total_vehicles == 0:
+            return 0.0
         return sum(self.waiting_times) / self.total_vehicles
 
     def max_waiting_time(self):
+        if len(self.waiting_times) == 0:
+            return 0.0
         return max(self.waiting_times)
 
     def min_waiting_time(self):
+        if len(self.waiting_times) == 0:
+            return 0.0
         return min(self.waiting_times)
 
     def median_waiting_time(self):
