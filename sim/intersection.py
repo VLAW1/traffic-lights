@@ -79,7 +79,10 @@ def generate_vehicle_arrivals(
     vehicle_id = 0
     while True:
         # wait based on defined vehicle arrival rate
-        yield env.timeout(np.random.exponential(rate))
+        # np.random.exponential expects the scale (1/lambda). `rate` is the
+        # arrival rate (lambda) in vehicles per second, so we convert it to the
+        # mean inter-arrival time.
+        yield env.timeout(np.random.exponential(1 / rate))
         # spawn vehicle
         vehicle_id += 1
         env.process(intersection_sim.vehicle_arrival(vehicle_id, direction))
