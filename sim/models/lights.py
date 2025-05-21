@@ -28,7 +28,7 @@ class TrafficLightCycleTime(BaseModel):
     yellow: float
 
 
-# ``phase'' := synchronized light combinations
+# "phase" := synchronized light combinations
 class Phase(BaseModel):
     lights: list[TrafficLight]
     cycle_time: TrafficLightCycleTime
