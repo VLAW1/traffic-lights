@@ -1,7 +1,7 @@
-from collections import defaultdict
 from collections.abc import Generator
 from itertools import cycle
 from typing import Any
+import random
 from datetime import datetime, timedelta
 
 from sim.traffic_patterns import TrafficPatternManager
@@ -14,6 +14,7 @@ from sim.models import (
     TrafficLight,
     TrafficLightState,
     Intersection,
+    Lane,
     ArrivalRates,
     SummaryStatistics,
 )
@@ -26,7 +27,7 @@ class IntersectionSimulation:
         self.env = env
         self.lights = intersection.lights
         self.phase_cycle = cycle(intersection.phases)
-        self.queues = defaultdict(list)
+        self.lanes = intersection.lanes or {}
         self.stats = SummaryStatistics()
 
         # start the traffic light cycle
@@ -52,22 +53,22 @@ class IntersectionSimulation:
     def vehicle_arrival(
         self,
         vehicle_id: int,
-        direction: Direction,
+        lane: Lane,
     ) -> Generator[Any, Any, None]:
         arrival_time = self.env.now
         self.stats.total_vehicles += 1
-        self.queues[direction].append((vehicle_id, arrival_time))
+        lane.queue.append((vehicle_id, arrival_time))
         # wait until light is green and vehicle is next up in queue
         while True:
             if (
-                self.lights[direction].state == TrafficLightState.GREEN
-                and self.queues[direction][0][0] == vehicle_id
+                lane.light.state == TrafficLightState.GREEN
+                and lane.queue[0][0] == vehicle_id
             ):
                 waiting_time = self.env.now - arrival_time
                 self.stats.waiting_times = np.append(
                     self.stats.waiting_times, waiting_time
                 )
-                self.queues[direction].pop(0)
+                lane.queue.pop(0)
                 break
             yield self.env.timeout(1)
 
@@ -95,7 +96,12 @@ def generate_vehicle_arrivals(
         yield env.timeout(np.random.exponential(1 / current_rate))
         # spawn vehicle
         vehicle_id += 1
-        env.process(intersection_sim.vehicle_arrival(vehicle_id, direction))
+        lanes = intersection_sim.lanes.get(direction)
+        if lanes:
+            lane = random.choice(lanes)
+        else:
+            lane = Lane(light=intersection_sim.lights[direction])
+        env.process(intersection_sim.vehicle_arrival(vehicle_id, lane))
 
 
 def simulate(
