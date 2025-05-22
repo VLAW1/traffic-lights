@@ -13,6 +13,17 @@ from sim.traffic_patterns import TrafficPatternManager
 
 
 def run_single_direction(start_time: time, multiplier: float, monkeypatch):
+    """Run the arrival process once and record the exponential scale.
+
+    Parameters
+    ----------
+    start_time : datetime.time
+        Simulation clock time used to seed the environment.
+    multiplier : float
+        Expected scaling factor for the base arrival rate.
+    monkeypatch : pytest.MonkeyPatch
+        Fixture used to patch ``numpy.random.exponential``.
+    """
     base_rate = 0.2
     manager = TrafficPatternManager({Direction.NORTH: base_rate})
     scales = []
@@ -43,10 +54,28 @@ def run_single_direction(start_time: time, multiplier: float, monkeypatch):
     ],
 )
 def test_dynamic_rate(monkeypatch, start, multiplier):
+    """Arrival rates should scale according to the active traffic pattern.
+
+    Parameters
+    ----------
+    monkeypatch : pytest.MonkeyPatch
+        Fixture to patch ``numpy.random.exponential``.
+    start : datetime.time
+        The simulation time when arrivals begin.
+    multiplier : float
+        Expected factor applied to the base arrival rate.
+    """
     run_single_direction(start, multiplier, monkeypatch)
 
 
 def test_rate_changes_with_time(monkeypatch):
+    """Rates should update when the simulation time crosses a threshold.
+
+    Parameters
+    ----------
+    monkeypatch : pytest.MonkeyPatch
+        Fixture used to patch ``numpy.random.exponential``.
+    """
     base_rate = 0.1
     manager = TrafficPatternManager({Direction.NORTH: base_rate})
     scales = []
