@@ -64,6 +64,15 @@ Run the default four-way intersection simulation:
 python -m sim
 ```
 
+You can override parameters directly on the command line:
+
+``` bash
+python -m sim --duration 7200 \
+    --north-rate 0.05 --south-rate 0.05 \
+    --east-rate 0.08 --west-rate 0.07 \
+    --metrics-path results.json
+```
+
 ## Creating Custom Intersections
 
 You can create custom intersections by defining light configurations and phases:

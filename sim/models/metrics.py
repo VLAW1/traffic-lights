@@ -41,6 +41,19 @@ class SummaryStatistics:
         plt.hist(self.waiting_times)
         plt.show()
 
+    def to_dict(self) -> dict:
+        """Return summary statistics as a serializable dictionary."""
+        return {
+            'total_vehicles': self.total_vehicles,
+            'average_waiting_time': self.average_waiting_time(),
+            'max_waiting_time': self.max_waiting_time(),
+            'min_waiting_time': self.min_waiting_time(),
+            'median_waiting_time': self.median_waiting_time(),
+            'std_waiting_time': self.standard_deviation_waiting_time(),
+            'variance_waiting_time': self.variance_waiting_time(),
+            'total_waiting_time': self.total_waiting_time(),
+        }
+
     def show_summary(self, include_plot: bool = False):
         print(
             f'Total vehicles:           {self.total_vehicles:.2f}\n'

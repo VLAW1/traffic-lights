@@ -1,4 +1,5 @@
 from sim.models.lights import Direction
 
 
-type ArrivalRates = dict[Direction, float]
+# Type alias for per-direction arrival rates
+ArrivalRates = dict[Direction, float]
