@@ -1,72 +1,14 @@
 from sim.models import (
     Direction,
-    TrafficLightState,
-    TrafficLight,
     TrafficLightCycleTime,
-    Phase,
-    Lane,
     Intersection,
 )
 
 
-lights = {
-    Direction.NORTH: TrafficLight(
-        source=Direction.NORTH,
-        destination=Direction.SOUTH,
-        state=TrafficLightState.RED,
-        name='North_Bound',
-    ),
-    Direction.SOUTH: TrafficLight(
-        source=Direction.SOUTH,
-        destination=Direction.NORTH,
-        state=TrafficLightState.RED,
-        name='South_Bound',
-    ),
-    Direction.EAST: TrafficLight(
-        source=Direction.EAST,
-        destination=Direction.WEST,
-        state=TrafficLightState.RED,
-        name='East_Bound',
-    ),
-    Direction.WEST: TrafficLight(
-        source=Direction.WEST,
-        destination=Direction.EAST,
-        state=TrafficLightState.RED,
-        name='West_Bound',
-    ),
-}
+uniform_cyle_time = TrafficLightCycleTime(green=30, yellow=3)
 
-uniform_cyle_time = TrafficLightCycleTime(
-    green=30,
-    yellow=3,
-)
-
-phases = [
-    Phase(
-        lights=[
-            lights[Direction.NORTH],
-            lights[Direction.SOUTH],
-        ],
-        cycle_time=uniform_cyle_time,
-    ),
-    Phase(
-        lights=[
-            lights[Direction.EAST],
-            lights[Direction.WEST],
-        ],
-        cycle_time=uniform_cyle_time,
-    ),
-]
-
-
-lanes = {
-    Direction.NORTH: [Lane(light=lights[Direction.NORTH])],
-    Direction.SOUTH: [Lane(light=lights[Direction.SOUTH])],
-    Direction.EAST: [Lane(light=lights[Direction.EAST])],
-    Direction.WEST: [Lane(light=lights[Direction.WEST])],
-}
-
-intersection: Intersection = Intersection(lights=lights, phases=phases, lanes=lanes)
+# Create a standard four-way intersection using the cycle time above.
+intersection: Intersection = Intersection.create_basic_four_way(uniform_cyle_time)
 
 
 # Vehicle arrival rates (vehicles/sec)
