@@ -115,7 +115,7 @@ phases = [
 ]
 
 # Create intersection
-intersection = Intersection(lights=lights, phases=phases)
+intersection = Intersection.create_basic_four_way(cycle_time)
 ```
 
 ## What's a "phase"?

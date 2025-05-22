@@ -14,6 +14,15 @@ class Direction(StrEnum):
     EAST = 'East'
     WEST = 'West'
 
+    def opposite(self) -> 'Direction':
+        """Return the opposite cardinal direction."""
+        return {
+            Direction.NORTH: Direction.SOUTH,
+            Direction.SOUTH: Direction.NORTH,
+            Direction.EAST: Direction.WEST,
+            Direction.WEST: Direction.EAST,
+        }[self]
+
 
 class TrafficLight(BaseModel):
     source: Direction
@@ -54,3 +63,37 @@ class Intersection(BaseModel):
     lights: dict[Direction, TrafficLight]
     phases: list[Phase]  # list[tuple[str, str]]
     lanes: dict[Direction, list[Lane]] | None = None
+
+    @classmethod
+    def create_basic_four_way(
+        cls,
+        cycle_time: TrafficLightCycleTime,
+        *,
+        light_state: TrafficLightState = TrafficLightState.RED,
+    ) -> 'Intersection':
+        """Return a standard four-way intersection using ``cycle_time`` for each phase."""
+
+        lights = {
+            d: TrafficLight(
+                source=d,
+                destination=d.opposite(),
+                state=light_state,
+                name=f'{d.value}_Bound',
+            )
+            for d in Direction
+        }
+
+        phases = [
+            Phase(
+                lights=[lights[Direction.NORTH], lights[Direction.SOUTH]],
+                cycle_time=cycle_time,
+            ),
+            Phase(
+                lights=[lights[Direction.EAST], lights[Direction.WEST]],
+                cycle_time=cycle_time,
+            ),
+        ]
+
+        lanes = {d: [Lane(light=lights[d])] for d in Direction}
+
+        return cls(lights=lights, phases=phases, lanes=lanes)
