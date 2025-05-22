@@ -4,6 +4,7 @@ from sim.models import (
     TrafficLight,
     TrafficLightCycleTime,
     Phase,
+    Lane,
     Intersection,
 )
 
@@ -58,7 +59,14 @@ phases = [
 ]
 
 
-intersection: Intersection = Intersection(lights=lights, phases=phases)
+lanes = {
+    Direction.NORTH: [Lane(light=lights[Direction.NORTH])],
+    Direction.SOUTH: [Lane(light=lights[Direction.SOUTH])],
+    Direction.EAST: [Lane(light=lights[Direction.EAST])],
+    Direction.WEST: [Lane(light=lights[Direction.WEST])],
+}
+
+intersection: Intersection = Intersection(lights=lights, phases=phases, lanes=lanes)
 
 
 # Vehicle arrival rates (vehicles/sec)

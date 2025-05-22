@@ -4,6 +4,7 @@ from sim.models.lights import (
     TrafficLight,
     TrafficLightCycleTime,
     Phase,
+    Lane,
     Intersection,
 )
 from sim.models.vehicles import ArrivalRates
@@ -16,6 +17,7 @@ __all__ = [
     'TrafficLight',
     'TrafficLightCycleTime',
     'Phase',
+    'Lane',
     'Intersection',
     'ArrivalRates',
     'SummaryStatistics',
