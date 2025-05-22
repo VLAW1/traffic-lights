@@ -3,6 +3,8 @@ import numpy as np
 import numpy.typing as npt
 from pydantic import ConfigDict
 from pydantic.dataclasses import dataclass, Field
+import pandas as pd
+from pathlib import Path
 
 
 @dataclass(config=ConfigDict(arbitrary_types_allowed=True))
@@ -53,6 +55,18 @@ class SummaryStatistics:
             'variance_waiting_time': self.variance_waiting_time(),
             'total_waiting_time': self.total_waiting_time(),
         }
+
+    def to_csv(self, file_path: str | Path) -> None:
+        """Write the summary statistics to ``file_path`` as CSV.
+
+        Parameters
+        ----------
+        file_path : str | Path
+            Destination CSV path. Any parent directories must already exist.
+        """
+
+        df = pd.DataFrame([self.to_dict()])
+        df.to_csv(Path(file_path), index=False)
 
     def show_summary(self, include_plot: bool = False):
         print(

@@ -1,0 +1,2 @@
+total_vehicles,average_waiting_time,max_waiting_time,min_waiting_time,median_waiting_time,std_waiting_time,variance_waiting_time,total_waiting_time
+6,12.0,35.0,0.0,6.5000000000000036,13.576941236277534,184.33333333333334,72.0
