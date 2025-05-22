@@ -22,20 +22,25 @@ traffic-lights/
 ├── sim/
 │   ├── __init__.py
 │   ├── __main__.py
-│   ├── intersection.py        # Core simulation logic
-│   ├── basic_fourway_intersection.py  # Sample intersection configuration
-│   ├── traffic_patterns.py    # Time-of-day traffic patterns
+│   ├── intersection.py                     # Core simulation logic
+│   ├── basic_fourway_intersection.py       # Sample intersection configuration
+│   ├── traffic_patterns.py                 # Time-of-day traffic patterns
 │   └── models/
 │       ├── __init__.py
-│       ├── lights.py          # Traffic light models
-│       ├── vehicles.py        # Vehicle models
-│       └── metrics.py         # Statistics collection
+│       ├── lights.py                       # Traffic light models
+│       ├── vehicles.py                     # Vehicle models
+│       └── metrics.py                      # Statistics collection
+├── tests/
+├── .gitignore
+├── AGENTS.md
+├── README.md                               # <-- You are here
+├── pyproject.toml                          # Currently, a single ruff rule
+└── requirements.txt                        # dependencies
 ```
 
 ## Getting Started
 
 ### Setup
-
 
 
 1. Clone the repository and `cd` into it:
@@ -46,8 +51,8 @@ traffic-lights/
 
 2. Create a virtual environment and install the required dependencies:
    ``` bash
-   python3 -m venv .venv
-   source .venv/bin/activate
+   python3.12 -m venv venv
+   source venv/bin/activate
    pip install -r requirements.txt
    ```
 
@@ -132,7 +137,7 @@ The simulation provides the following metrics:
 - Maximum and minimum waiting times
 - Median waiting time
 - Standard deviation of waiting times
-- Histogram visualization of waiting time distribution
+- Optionally, a histogram visualization of waiting time distribution
 
 ## License
 
