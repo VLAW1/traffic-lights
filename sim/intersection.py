@@ -1,3 +1,5 @@
+"""Simulation engine for traffic light intersections."""
+
 from collections.abc import Generator
 from itertools import cycle
 from typing import Any
@@ -23,21 +25,28 @@ np.random.seed(42)
 
 
 class IntersectionSimulation:
+    """Manage the state of an ``Intersection`` in a ``simpy`` environment."""
+
     def __init__(self, env, intersection: Intersection) -> None:
+        """Initialize the simulation and start the light cycle."""
+
         self.env = env
         self.lights = intersection.lights
         self.phase_cycle = cycle(intersection.phases)
         self.lanes = intersection.lanes or {}
         self.stats = SummaryStatistics()
 
-        # start the traffic light cycle
         env.process(self.run())
 
-    def change_lights(self, lights: list[TrafficLight], state: TrafficLightState):
+    def change_lights(self, lights: list[TrafficLight], state: TrafficLightState) -> None:
+        """Set ``state`` on all traffic ``lights``."""
+
         for light in lights:
             self.lights[light.source].state = state
 
     def run(self) -> Generator[Any, Any, None]:
+        """Iterate through the configured phases indefinitely."""
+
         while True:
             next_phase = next(self.phase_cycle)
             lights = next_phase.lights
@@ -55,10 +64,11 @@ class IntersectionSimulation:
         vehicle_id: int,
         lane: Lane,
     ) -> Generator[Any, Any, None]:
+        """Process a single vehicle through ``lane``."""
+
         arrival_time = self.env.now
         self.stats.total_vehicles += 1
         lane.queue.append((vehicle_id, arrival_time))
-        # wait until light is green and vehicle is next up in queue
         while True:
             if (
                 lane.light.state == TrafficLightState.GREEN
@@ -80,21 +90,18 @@ def generate_vehicle_arrivals(
     rate: float,
     traffic_manager: 'TrafficPatternManager | None' = None,
 ):
+    """Yield vehicle arrival events according to ``rate`` or a manager."""
+
     vehicle_id = 0
     while True:
-        # determine the current arrival rate
         current_rate = rate
         if traffic_manager is not None:
-            # convert current simulation time to a time-of-day value
             seconds = int(env.now) % (24 * 60 * 60)
             current_time = (datetime.min + timedelta(seconds=seconds)).time()
             current_rate = traffic_manager.get_arrival_rates(current_time)[direction]
 
-        # np.random.exponential expects the scale (1/lambda). `current_rate` is
-        # the arrival rate (lambda) in vehicles per second, so we convert it to
-        # the mean inter-arrival time.
+        # ``numpy.random.exponential`` expects a scale of ``1/lambda``.
         yield env.timeout(np.random.exponential(1 / current_rate))
-        # spawn vehicle
         vehicle_id += 1
         lanes = intersection_sim.lanes.get(direction)
         if lanes:
@@ -112,12 +119,32 @@ def simulate(
     traffic_manager: 'TrafficPatternManager | None' = None,
     start_time: int = 0,
 ) -> SummaryStatistics:
+    """Run a complete intersection simulation.
+
+    Parameters
+    ----------
+    duration : int
+        Length of the simulation in seconds.
+    intersection : Intersection
+        Intersection configuration to simulate.
+    arrival_rates : ArrivalRates | None, optional
+        Constant per-direction arrival rates. Ignored when
+        ``traffic_manager`` is provided.
+    traffic_manager : TrafficPatternManager | None, optional
+        Manager used to update arrival rates dynamically.
+    start_time : int, optional
+        Initial simulation time in seconds.
+
+    Returns
+    -------
+    SummaryStatistics
+        Collected simulation statistics.
+    """
+
     env = simpy.Environment(initial_time=start_time)
 
-    # start intersection simulation
     intersection_sim = IntersectionSimulation(env, intersection)
 
-    # start vehicle arrival processes
     if traffic_manager is not None:
         base_rates = traffic_manager.base_rates
         for direction, rate in base_rates.items():
@@ -138,7 +165,6 @@ def simulate(
     else:
         raise ValueError('Either arrival_rates or traffic_manager must be provided')
 
-    # run simulation
     env.run(until=duration)
 
     return intersection_sim.stats

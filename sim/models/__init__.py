@@ -1,3 +1,5 @@
+"""Public models used throughout the simulation."""
+
 from sim.models.lights import (
     Direction,
     TrafficLightState,

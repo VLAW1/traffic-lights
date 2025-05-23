@@ -1,3 +1,5 @@
+"""Unit tests for traffic pattern selection and scaling."""
+
 import pytest
 from datetime import time
 

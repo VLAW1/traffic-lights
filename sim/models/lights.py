@@ -1,14 +1,18 @@
+"""Core traffic light and intersection models."""
+
 from pydantic import BaseModel, Field
 from enum import StrEnum
 
 
 class TrafficLightState(StrEnum):
+    """Enumeration of possible traffic light colors."""
     GREEN = 'Green'
     YELLOW = 'Yellow'
     RED = 'Red'
 
 
 class Direction(StrEnum):
+    """Cardinal directions for traffic flow."""
     NORTH = 'North'
     SOUTH = 'South'
     EAST = 'East'
@@ -25,20 +29,23 @@ class Direction(StrEnum):
 
 
 class TrafficLight(BaseModel):
+    """A single traffic light controlling movement between two directions."""
     source: Direction
     destination: Direction
     state: TrafficLightState = TrafficLightState.RED
     name: str | None = None
 
 
-# Traffice light cycle times model
 class TrafficLightCycleTime(BaseModel):
+    """Duration of green and yellow light phases in seconds."""
+
     green: float
     yellow: float
 
 
-# "phase" := synchronized light combinations
 class Phase(BaseModel):
+    """A collection of lights that change state together."""
+
     lights: list[TrafficLight]
     cycle_time: TrafficLightCycleTime
 
@@ -60,8 +67,10 @@ class Lane(BaseModel):
 
 
 class Intersection(BaseModel):
+    """Container for lights, phases and lanes at an intersection."""
+
     lights: dict[Direction, TrafficLight]
-    phases: list[Phase]  # list[tuple[str, str]]
+    phases: list[Phase]
     lanes: dict[Direction, list[Lane]] | None = None
 
     @classmethod
