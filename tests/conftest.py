@@ -1,3 +1,5 @@
+"""Test configuration for importing project modules."""
+
 import sys
 from pathlib import Path
 

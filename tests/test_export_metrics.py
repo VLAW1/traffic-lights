@@ -1,3 +1,5 @@
+"""Tests for exporting simulation metrics to CSV."""
+
 import pandas as pd
 from pathlib import Path
 

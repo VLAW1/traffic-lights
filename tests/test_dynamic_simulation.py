@@ -1,3 +1,5 @@
+"""Tests covering the dynamic arrival process during a simulation."""
+
 import numpy as np
 import simpy
 import pytest

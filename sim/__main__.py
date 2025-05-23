@@ -1,3 +1,5 @@
+"""Command line interface for running traffic light simulations."""
+
 import argparse
 import json
 from pathlib import Path
@@ -12,6 +14,15 @@ from sim.models.lights import Direction
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse command line arguments.
+
+    Returns
+    -------
+    argparse.Namespace
+        Parsed arguments populated with defaults from
+        :mod:`sim.basic_fourway_intersection`.
+    """
+
     parser = argparse.ArgumentParser(description='Traffic light simulation')
     parser.add_argument(
         '--duration',
@@ -52,6 +63,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """Run the simulation with parameters from ``parse_args``."""
+
     args = parse_args()
     rates = {
         Direction.NORTH: args.north_rate,

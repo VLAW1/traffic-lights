@@ -1,0 +1,2 @@
+
+"""Traffic light simulation package."""
