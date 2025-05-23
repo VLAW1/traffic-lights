@@ -4,16 +4,6 @@ This document outlines potential areas for expanding the simulation. Each featur
 
 ## Planned Improvements
 
-### Multi-lane intersections
-- Support separate lanes for turning and through movements
-- Lane-specific queues and signal phases
-- **Implementation notes**
-  - Introduce a `Lane` model to maintain a queue of vehicles for each movement.
-  - Extend `Intersection` so every direction can define multiple lanes and map them to specific signal phases.
-  - Update arrival logic to assign vehicles to lanes based on intended turn direction.
-- **Tests to consider**
-  - Verify that vehicles are enqueued in the proper lane given their desired movement.
-  - Simulate a dedicated left-turn lane and confirm that its queue only moves during the corresponding phase.
 
 ### Traffic network of connected intersections
 - Model downstream effects of one intersection on another
